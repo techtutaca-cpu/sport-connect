@@ -14,24 +14,24 @@ interface PersonalizedFeedProps {
   userInterests: string[];
 }
 
+const sportEmojis: { [key: string]: string } = {
+  'football': '🏈',
+  'basketball': '🏀',
+  'soccer': '⚽',
+  'baseball': '⚾',
+  'tennis': '🎾',
+  'hockey': '🏒',
+  'volleyball': '🏐',
+  'cricket': '🏏',
+  'rugby': '🏉',
+  'golf': '⛳',
+  'swimming': '🏊',
+  'cycling': '🚴',
+};
+
 export const PersonalizedFeed: React.FC<PersonalizedFeedProps> = ({ userInterests }) => {
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const sportEmojis: { [key: string]: string } = {
-    'football': '🏈',
-    'basketball': '🏀',
-    'soccer': '⚽',
-    'baseball': '⚾',
-    'tennis': '🎾',
-    'hockey': '🏒',
-    'volleyball': '🏐',
-    'cricket': '🏏',
-    'rugby': '🏉',
-    'golf': '⛳',
-    'swimming': '🏊',
-    'cycling': '🚴',
-  };
 
   useEffect(() => {
     // Simulate fetching personalized feed based on interests

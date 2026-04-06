@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 interface Comment {
   id: number;
@@ -16,13 +16,6 @@ export const Comments: React.FC<{ forumId: number }> = ({ forumId }) => {
   const [authorName, setAuthorName] = useState('');
   const [loading, setLoading] = useState(true);
   const [showMentions, setShowMentions] = useState(false);
-
-  // Extract mentions from comment text
-  const extractMentions = (text: string): string[] => {
-    const mentionRegex = /@(\w+)/g;
-    const matches = text.match(mentionRegex) || [];
-    return matches.map(m => m.substring(1)); // Remove @ symbol
-  };
 
   // Render comment with highlighted mentions
   const renderCommentWithMentions = (text: string) => {
@@ -44,7 +37,7 @@ export const Comments: React.FC<{ forumId: number }> = ({ forumId }) => {
   const mentionedUsers = Array.from(new Set(comments.map(c => c.author)));
 
   // Fetch comments - refetch whenever forumId changes or after posting
-  const fetchComments = () => {
+  const fetchComments = useCallback(() => {
     fetch(`http://localhost:3001/api/forums/${forumId}/comments`)
       .then(res => res.json())
       .then(data => {
@@ -56,16 +49,16 @@ export const Comments: React.FC<{ forumId: number }> = ({ forumId }) => {
         setComments([]);
         setLoading(false);
       });
-  };
+  }, [forumId]);
 
   useEffect(() => {
     fetchComments();
-    
+
     // Refresh comments every 3 seconds to see new comments from others
     const interval = setInterval(fetchComments, 3000);
-    
+
     return () => clearInterval(interval);
-  }, [forumId]);
+  }, [forumId, fetchComments]);
 
   const handleAddComment = async () => {
     if (!newComment.trim() || !authorName.trim()) {
